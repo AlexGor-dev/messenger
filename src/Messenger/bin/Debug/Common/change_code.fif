@@ -1,0 +1,23 @@
+#!/usr/bin/env fift -s
+"TonUtil.fif" include
+"../lib/mylib.fif" include
+
+true constant bounce
+0x1003 constant action
+
+$1 parse-int =: time
+$2 =: file-base
+$3 parse-int =: private_key
+$4 bounce parse-load-address =: bounce 2=: wallet_addr
+def? $5 { @' $5 } { "change_code-query" } cond constant savefile
+
+"Asm.fif" include
+file-base "_code.asm" $+ include
+
+<b time 64 u, action 32 u, swap ref, b>
+dup hashu private_key intToKey ed25519_sign_uint
+<b b{1000100} s, wallet_addr addr, 0 Gram, b{00} s, swap B, swap ref, b>
+
+2 boc+>B
+savefile +".boc" tuck B>file
+."result:[" type ."]"

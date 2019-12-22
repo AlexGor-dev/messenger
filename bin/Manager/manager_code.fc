@@ -1,0 +1,143 @@
+;; 0x2001 - addContract;
+;; 0x2002 - removeContract;
+
+
+;; 0x1001 - create;
+;; 0x1002 - sendMessage;
+;; 0x1003 - changeCode;
+;; 0x1004 - changeOwner
+
+_ loadOwner(slice owner) inline_ref
+{
+    return (owner~load_uint(256), owner~load_uint(8), owner~load_uint(4), owner~load_uint(4), owner~load_ref().begin_parse());
+}
+_ loadData()  inline_ref
+{
+    slice data = get_data().begin_parse();
+    return (data~load_uint(64), data~load_ref(), data~load_dict());
+}
+
+() saveData(int time, cell owner, cell contractsDict) impure
+{
+    set_data(
+    begin_cell()
+    .store_uint(time, 64)
+    .store_ref(owner)
+    .store_dict(contractsDict)
+    .end_cell());
+}
+
+(cell, int) addContract(cell contractsDict, slice contractData) impure
+{
+    int addedNum = 0;
+    int pk = contractData~load_uint(256);
+    (slice cs, int found) = contractsDict.udict_get?(256, pk);
+    ifnot(found)
+    {
+        accept_message();
+        contractsDict~udict_set_builder(256, pk, begin_cell().store_ref(contractData~load_ref()));
+        addedNum += 1;
+    }
+    throw_unless(38, addedNum);
+    return (contractsDict, addedNum);
+}
+
+(cell, int) removeContract(cell contractsDict, slice contractData) impure
+{
+    int pk = contractData~load_uint(256);
+    (slice cs, int found) = contractsDict.udict_get?(256, pk);
+    throw_unless(39, found);
+    accept_message();
+    contractsDict~udict_delete_get?(256, pk);
+    return (contractsDict, 1);
+}
+
+() recv_internal(int amount, cell in_msg_cell, slice in_msg) impure
+{
+
+}
+
+() recv_external(slice in_msg) impure
+{
+    slice signature = in_msg~load_bits(512);
+    cell msgCell = in_msg~load_ref();
+    slice cs = msgCell.begin_parse();
+
+    (int time, cell owner, cell contractsDict) = loadData();
+
+    int msgTime = cs~load_uint(64);
+    throw_if(26, msgTime <= time);
+    throw_unless(34, check_signature(cell_hash(msgCell), signature, owner.begin_parse().preload_uint(256)));
+    int num = 0;
+    int action = cs~load_uint(32);
+
+    if(action == 0x1002);;sendMessage
+    {
+        if (cs.slice_refs())
+        {
+            accept_message();
+            num = 1;
+            var mode = cs~load_uint(8);
+            send_raw_message(cs~load_ref(), mode);
+        }
+    }
+    elseif (action == 0x2001);;addContract;
+    {
+        num = contractsDict~addContract(cs~load_ref().begin_parse());
+    }
+    elseif (action == 0x2002);;removeContract;
+    {
+        num = contractsDict~removeContract(cs~load_ref().begin_parse());
+    }
+    elseif(action == 0x1003);;changeCode
+    {
+        set_code(cs~load_ref());
+    }
+    elseif(action == 0x1004);;changeOwner
+    {
+        owner = cs~load_ref();
+    }
+    elseif(action == 0x1001)
+    {
+
+    }
+    else
+    {
+        throw_if(32, 3);
+    }
+
+    if(num == 0) { accept_message(); }
+
+    saveData(msgTime, owner, contractsDict);
+}
+
+_ getContract(int id) method_id
+{
+    (int time, cell owner, cell contractsDict) = loadData();
+    (id, slice cs, int f) = contractsDict.udict_get_next?(256, id);
+    if (f)
+    {
+        slice data = cs~load_ref().begin_parse();
+        return (id, data~load_bits(264), data~load_ref().begin_parse());
+    }
+    slice null = begin_cell().end_cell().begin_parse();
+    return (-1, null, null);
+}
+
+int getSeqno() method_id
+{
+  return get_data().begin_parse().preload_uint(32);
+}
+
+_ getOwner() method_id
+{
+    (int time, cell owner, cell contractsDict) = loadData();
+    return loadOwner(owner.begin_parse());
+}
+
+(int) getGtams() method_id
+{
+    (int ngrams, cell cs) = unpair(get_balance());
+    return (ngrams);
+}
+

@@ -1,0 +1,42 @@
+// #!/usr/bin/env fift -s
+"TonUtil.fif" include
+"Asm.fif" include
+"../lib/mylib.fif" include
+
+0x1001 constant action
+3 constant type
+
+$1 parse-workchain-id =: wc    // set workchain id from command line argument
+$2 =: name    // set workchain id from command line argument
+$3 parse-int =: type
+$4 parse-int =: ownerType
+def? $5 { @' $5 } { "manager" } cond constant file-base
+
+newkeypair constant public_key constant private_key
+public_key keyToInt constant pub_int_key
+
+"manager_code.asm" include // code
+
+<b name $, b>
+<b pub_int_key 256 u, 0 8 u, ownerType 4 u, type 4 u, swap ref, b>
+<b 0 64 u, swap ref, dictnew dict, b> // data
+null // lib
+
+<b b{0011} s, 3 roll ref, rot ref, swap dict, b>  // create StateInit
+
+dup hash wc swap 2dup 2constant wallet_addr
+2drop
+
+<b 1 64 u, action 32 u, b>
+dup hash private_key ed25519_sign_uint rot
+<b b{1000100} s, wallet_addr addr, b{000010} s, swap <s s, b{0} s, swap B, swap ref, b>
+2 boc+>B
+file-base +"-query.boc" tuck B>file
+
+
+."result:["
+pub_int_key . .","
+private_key keyToInt . .","
+wallet_addr 2dup 7 .Addr .","
+."]"
+

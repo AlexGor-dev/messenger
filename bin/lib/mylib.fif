@@ -1,0 +1,29 @@
+{ <b swap B, b> <s 256 u@ } : keyToInt
+{ <b swap 256 u, b> <s 32 B@ } : intToKey
+
+{ 4 u@+ 4 u@+ 256 u@+ } : addr@+
+{ 4 u@+ 4 u@+ 256 u@ } : addr@
+{ 7 u@+ addr@+ Gram@+ 2 u@+ 64 B@ } : header@
+
+{ dup +".pk" file-exists?
+  {
+    +".pk" load-keypair
+  .s cr
+
+  }
+  {
+    .s cr
+    drop
+    newkeypair
+    dup 3 pick +".pub" B>file
+    ."(Saved public key to file .pub)" cr
+    over 3 pick +".pk" B>file
+    ."(Saved private key to file .pk)" cr
+      } cond
+} : load-generate-keys
+
+{
+    <b 2 pick $, b>
+    <b 4 pick 256 u, 0 8 u, 2 pick 8 u, swap ref, b>
+} : owner
+

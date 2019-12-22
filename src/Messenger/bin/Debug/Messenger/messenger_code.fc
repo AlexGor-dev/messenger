@@ -1,0 +1,359 @@
+;; 0x2001 - addMember;
+;; 0x2004 - removeMember;
+;; 0x2002 - addMessage;
+;; 0x2003 - removeMessage;
+
+;; 0x2005 - addToBlackList;
+;; 0x2006 - removeFromBlackList;
+
+;; 0x1001 - create;
+;; 0x1002 - sendMessage;
+;; 0x1003 - changeCode;
+;; 0x1004 - changeOwner
+
+_ loadOwner(cell owner)  inline_ref
+{
+    slice data = owner.begin_parse();
+    return (data~load_uint(256), data~load_uint(8), data~load_uint(4), data~load_uint(4), data~load_ref().begin_parse());
+}
+
+_ loadMembers(cell members)  inline_ref
+{
+    slice data = members.begin_parse();
+    return (data~load_dict(), data~load_dict());
+}
+
+(cell) saveMembers(cell memberDict, cell blackList) impure
+{
+    return begin_cell().store_dict(memberDict).store_dict(blackList).end_cell();
+}
+
+_ loadMessages(cell messages)  inline_ref
+{
+    slice data = messages.begin_parse();
+    return (data~load_uint(64), data~load_dict());
+}
+
+(cell) saveMessages(int id, cell messageDict) impure
+{
+    return begin_cell().store_uint(id, 64).store_dict(messageDict).end_cell();
+}
+
+_ loadData()  inline_ref
+{
+    slice data = get_data().begin_parse();
+    return (data~load_uint(64), data~load_ref(), data~load_ref(), data~load_ref());
+}
+
+_ loadMinData()  inline_ref
+{
+    slice data = get_data().begin_parse();
+    return (data~load_uint(64), data~load_ref());
+}
+
+() saveData(int time, cell owner, cell members, cell messages) impure
+{
+    set_data(
+    begin_cell()
+    .store_uint(time, 64)
+    .store_ref(owner)
+    .store_ref(members)
+    .store_ref(messages)
+    .end_cell());
+}
+
+() sendMessageBack(addr, action, time, grams, mode) impure
+{
+    var msg = begin_cell()
+    .store_uint(0x18, 6)
+    .store_slice(addr)
+    .store_grams(grams)
+    .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1)
+    .store_uint(action, 32)
+    .store_uint(time, 32);
+    return send_raw_message(msg.end_cell(), mode);
+}
+
+(cell, int) addMember(cell memberDict, slice memberData) impure
+{
+    int addedNum = 0;
+    int pk = memberData~load_uint(256);
+    (slice cs, int found) = memberDict.udict_get?(256, pk);
+    ifnot(found)
+    {
+        accept_message();
+        memberDict~udict_set_builder(256, pk, begin_cell().store_ref(memberData~load_ref()));
+        addedNum += 1;
+    }
+    throw_unless(38, addedNum);
+    return (memberDict, addedNum);
+}
+
+(cell, int) removeMember(cell memberDict, int id) impure
+{
+    int removeNum = 0;
+    var(s, f) = memberDict~udict_delete_get?(256, id);
+    if (f)
+    {
+        accept_message();
+        removeNum += 1;
+    }
+    throw_unless(38, removeNum);
+    return (memberDict, removeNum);
+}
+
+() addMessage(slice sender_addr, int msgTime, slice in_msg) impure
+{
+    (int time, cell owner, cell members, cell messages) = loadData();
+    (int key, int state, int ownerType, int type1, slice name) = loadOwner(owner);
+    (cell memberDict, cell blackList) = loadMembers(members);
+    int pk = in_msg~load_uint(256);
+    (slice cs, int found) = blackList.udict_get?(256, pk);
+    throw_if(41, found);
+    (slice cs, int found) = memberDict.udict_get?(256, pk);
+    ifnot(found)
+    {
+        throw_if(35, ownerType == 1);
+        var (src_wc, src_addr) = parse_std_addr(sender_addr);
+        cell data = begin_cell().store_uint(src_wc, 8).store_uint(src_addr, 256).end_cell();
+        memberDict~udict_set_builder(256, pk, begin_cell().store_ref(data));
+        members = saveMembers(memberDict, blackList);
+    }
+    (int id, cell messageDict) = loadMessages(messages);
+    id += 1;
+    messageDict~udict_set_builder(64, id, begin_cell().store_uint(msgTime, 32).store_uint(pk, 256).store_ref(in_msg~load_ref()));
+    saveData(time, owner, members, saveMessages(id, messageDict));
+    return sendMessageBack(sender_addr, 0xffffffff, msgTime, 0, 64);
+}
+
+(cell, int) removeMessage(cell messages, int id, int mode) impure
+{
+    int removeNum = 0;
+    (int lastID, cell messageDict) = loadMessages(messages);
+    if(mode == 0)
+    {
+        do
+        {
+            var (messageDict', i, _, f) = messageDict.udict_delete_get_min(64);
+            f~touch();
+            if (f)
+            {
+                if (i <= id)
+                {
+                    if(removeNum == 0) { accept_message(); }
+                    messageDict = messageDict';
+                    removeNum += 1;
+                }
+            }
+        }
+        until (~ f);
+    }
+    elseif(mode == 1)
+    {
+        var(s, f) = messageDict~udict_delete_get?(64, id);
+        if (f)
+        {
+            accept_message();
+            removeNum += 1;
+        }
+    }
+    elseif(mode == 2)
+    {
+        do
+        {
+            (int mid , slice cs, int f) = messageDict.udict_get_next?(64, -1);
+            if (f)
+            {
+                var(s, i) = messageDict~udict_delete_get?(64, mid);
+                if(removeNum == 0) { accept_message(); }
+                removeNum += 1;
+            }
+        } until (~ f);
+    }
+    throw_unless(38, removeNum);
+    return (saveMessages(id, messageDict), removeNum);
+}
+
+
+() recv_internal(int amount, cell in_msg_cell, slice in_msg) impure
+{
+    var cs = in_msg_cell.begin_parse();
+    var flags = cs~load_uint(4);
+
+
+    if (flags & 1) { return (); }
+    if (in_msg.slice_empty?()) { return (); }
+
+
+    slice sender_addr = cs~load_msg_addr();
+    int action = in_msg~load_uint(32);
+    if (action == 0) { return (); }
+
+    int time = in_msg~load_uint(32);
+
+    if(action == 0x2002)
+    {
+        return addMessage(sender_addr, time, in_msg);
+    }
+}
+
+() recv_external(slice in_msg) impure
+{
+    slice signature = in_msg~load_bits(512);
+    cell msgCell = in_msg~load_ref();
+    slice cs = msgCell.begin_parse();
+
+    (int time, cell owner, cell members, cell messages) = loadData();
+
+    int msgTime = cs~load_uint(64);
+    throw_if(26, msgTime <= time);
+
+    throw_unless(34, check_signature(cell_hash(msgCell), signature, owner.begin_parse().preload_uint(256)));
+    int num = 0;
+    int action = cs~load_uint(32);
+
+    if(action == 0x1002);;sendMessage
+    {
+        if (cs.slice_refs())
+        {
+            accept_message();
+            num = 1;
+            var mode = cs~load_uint(8);
+            send_raw_message(cs~load_ref(), mode);
+        }
+        throw_unless(44, num);
+    }
+    elseif (action == 0x2003);;removeMessage;
+    {
+        num = messages~removeMessage(cs~load_uint(64), cs~load_uint(2));
+    }
+    elseif (action == 0x2001);;addMember;
+    {
+        (cell memberDict, cell blackList) = loadMembers(members);
+        num = memberDict~addMember(cs~load_ref().begin_parse());
+        members = saveMembers(memberDict, blackList);
+    }
+    elseif (action == 0x2004);;removeMember;
+    {
+        (cell memberDict, cell blackList) = loadMembers(members);
+        num = memberDict~removeMember(cs~load_uint(256));
+        members = saveMembers(memberDict, blackList);
+    }
+    elseif (action == 0x2005);;addToBlackList;
+    {
+        (cell memberDict, cell blackList) = loadMembers(members);
+        num = blackList~addMember(cs~load_ref().begin_parse());
+        members = saveMembers(memberDict, blackList);
+    }
+    elseif (action == 0x2006);;removeFromBlackList;
+    {
+        (cell memberDict, cell blackList) = loadMembers(members);
+        num = blackList~removeMember(cs~load_uint(256));
+        members = saveMembers(memberDict, blackList);
+    }
+    elseif(action == 0x1003);;changeCode
+    {
+        set_code(cs~load_ref());
+    }
+    elseif(action == 0x1004);;changeOwner
+    {
+        owner = cs~load_ref();
+    }
+    elseif(action == 0x1001)
+    {
+
+    }
+    else
+    {
+        throw_if(32, 3);
+    }
+
+    if(num == 0) { accept_message(); }
+
+    saveData(msgTime, owner, members, messages);
+}
+
+(int, slice) getMember(int id) method_id
+{
+    (int time, cell owner, cell members, cell messages) = loadData();
+    (cell memberDict, cell blackList) = loadMembers(members);
+    (id, slice cs, int f) = memberDict.udict_get_next?(256, id);
+    if (f)
+    {
+        slice data = cs~load_ref().begin_parse();
+        return (id, data);
+    }
+    slice null = begin_cell().end_cell().begin_parse();
+    return (-1, null);
+}
+
+_ getMessages(int id) method_id
+{
+    (int time, cell owner, cell members, cell messages) = loadData();
+    (int lastID, cell messageDict) = loadMessages(messages);
+    slice null = begin_cell().end_cell().begin_parse();
+    (id, slice cs, int f) = messageDict.udict_get_next?(64, id);
+    if (f)
+    {
+        int time = cs~load_uint(32);
+        int pk = cs~load_uint(256);
+
+        slice t = cs~load_ref().begin_parse();
+        slice t1 = t~load_bits(t.slice_bits());
+        slice t2 = null;
+        slice t3 = null;
+        slice t4 = null;
+        slice t5 = null;
+        slice t6 = null;
+        slice t7 = null;
+        if(t.slice_refs())
+        {
+            t = t~load_ref().begin_parse();
+            t2 = t~load_bits(t.slice_bits());
+        }
+        if(t.slice_refs())
+        {
+            t = t~load_ref().begin_parse();
+            t3 = t~load_bits(t.slice_bits());
+        }
+        if(t.slice_refs())
+        {
+            t = t~load_ref().begin_parse();
+            t4 = t~load_bits(t.slice_bits());
+        }
+        if(t.slice_refs())
+        {
+            t = t~load_ref().begin_parse();
+            t5 = t~load_bits(t.slice_bits());
+        }
+        if(t.slice_refs())
+        {
+           t = t~load_ref().begin_parse();
+           t6 = t~load_bits(t.slice_bits());
+        }
+        if(t.slice_refs())
+        {
+            t = t~load_ref().begin_parse();
+            t7 = t~load_bits(t.slice_bits());
+        }
+        return (id, time, pk, t1, t2, t3, t4, t5, t6, t7);
+    }
+    return (-1, 0, 0, null, null, null, null, null, null, null);
+}
+
+int getSeqno() method_id
+{
+  return get_data().begin_parse().preload_uint(32);
+}
+
+_ getOwner() method_id
+{
+    (int time, cell owner) = loadMinData();
+    return loadOwner(owner);
+}
+
+(int) getGtams() method_id
+{
+    (int ngrams, cell cs) = unpair(get_balance());
+    return (ngrams);
+}

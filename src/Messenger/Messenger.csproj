@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9CB8A651-A164-4D08-992A-8DFED6AB835C}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Messenger</RootNamespace>
+    <AssemblyName>Messenger</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CryptoLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\CryptoLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Data.Sqlite.1.0.61\lib\net40\Mono.Data.Sqlite.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AddMemberForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddMemberForm.Designer.cs">
+      <DependentUpon>AddMemberForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ClientExecutor.cs" />
+    <Compile Include="Config.cs" />
+    <Compile Include="Contracts\Contract.cs" />
+    <Compile Include="Controls\MessageBody.cs" />
+    <Compile Include="Controls\MessageItem.cs" />
+    <Compile Include="Controls\MessageListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\MessagePage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\WaitControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CreateContractForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateContractForm.Designer.cs">
+      <DependentUpon>CreateContractForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateManagerForm.Designer.cs">
+      <DependentUpon>CreateManagerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dict.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Contracts\MessengerContract.cs" />
+    <Compile Include="ContractManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ContractManagerForm.Designer.cs">
+      <DependentUpon>ContractManagerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Intrfaces.cs" />
+    <Compile Include="Controls\OwnerItem.cs" />
+    <Compile Include="Controls\OwnerListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\MemberItem.cs" />
+    <Compile Include="Controls\MemberListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Contracts\ManagerContract.cs" />
+    <Compile Include="Members\Message.cs" />
+    <Compile Include="Members\Member.cs" />
+    <Compile Include="MessageBase.cs" />
+    <Compile Include="ProcessExecutor.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Controls\ContractItem.cs" />
+    <Compile Include="Controls\ContractListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="RenameForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RenameForm.Designer.cs">
+      <DependentUpon>RenameForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RunmethodParser.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Members\Owner.cs" />
+    <Compile Include="Crypto.cs" />
+    <Compile Include="SendGramForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SendGramForm.Designer.cs">
+      <DependentUpon>SendGramForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SendGramsToForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SendGramsToForm.Designer.cs">
+      <DependentUpon>SendGramsToForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Serialization\Disposable.cs" />
+    <Compile Include="Serialization\Interfaces.cs" />
+    <Compile Include="Serialization\Serializable.cs" />
+    <Compile Include="SQLite\DataObject.cs" />
+    <Compile Include="SQLite\Interfaces.cs" />
+    <Compile Include="SQLite\SQLBase.cs" />
+    <Compile Include="SQLite\SqlDatabase.cs" />
+    <Compile Include="SQLite\SQLiteProfider.cs" />
+    <Compile Include="SQLite\SqlTable.cs" />
+    <Compile Include="SQLite\Table.cs" />
+    <Compile Include="SQLite\TableColumn.cs" />
+    <Compile Include="SQLite\TableColumnCollection.cs" />
+    <Compile Include="SQLite\TableEventArgs.cs" />
+    <Compile Include="SQLite\TableRow.cs" />
+    <Compile Include="SQLite\TableRowCollection.cs" />
+    <Compile Include="ThreadStack.cs" />
+    <Compile Include="Utils.cs" />
+    <Compile Include="Gram.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AddMemberForm.resx">
+      <DependentUpon>AddMemberForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ContractManagerForm.resx">
+      <DependentUpon>ContractManagerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateContractForm.resx">
+      <DependentUpon>CreateContractForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateManagerForm.resx">
+      <DependentUpon>CreateManagerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RenameForm.resx">
+      <DependentUpon>RenameForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SendGramForm.resx">
+      <DependentUpon>SendGramForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SendGramsToForm.resx">
+      <DependentUpon>SendGramsToForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

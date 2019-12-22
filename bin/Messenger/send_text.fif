@@ -1,0 +1,30 @@
+#!/usr/bin/env fift -s
+"TonUtil.fif" include
+"Asm.fif" include
+"../lib/mylib.fif" include
+
+0x2002 constant action
+
+$1 parse-int =: time
+$2 =: dataFile
+$3 parse-int =: sender_public_key
+def? $4 { @' $4 } { "send_text-query" } cond constant savefile
+
+<b b>
+dataFile file>B
+
+{ dup Blen 127 min B| <b rot B, rot ref, b> swap } =: append
+dup Blen 0 > append if
+dup Blen 0 > append if
+dup Blen 0 > append if
+dup Blen 0 > append if
+dup Blen 0 > append if
+dup Blen 0 > append if
+dup Blen 0 > append if
+swap
+
+<b action 32 u, time 32 u, sender_public_key 256 u,  swap ref, b>
+
+2 boc+>B
+savefile +".boc" tuck B>file
+."result:[" type ."]"

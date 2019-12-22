@@ -1,0 +1,37 @@
+﻿<Properties StartupConfiguration="{9CB8A651-A164-4D08-992A-8DFED6AB835C}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Messenger/ContractManagerForm.cs">
+    <Files>
+      <File FileName="Messenger/Contracts/MessengerContract.cs" Line="234" Column="1" />
+      <File FileName="Messenger/ThreadStack.cs" Line="69" Column="69" />
+      <File FileName="Messenger/MainForm.cs" Line="30" Column="22" />
+      <File FileName="Messenger/ContractManagerForm.cs" Line="159" Column="33" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Ton" expanded="True">
+            <Node name="Messenger" expanded="True">
+              <Node name="References" expanded="True" />
+              <Node name="Contracts" expanded="True" />
+              <Node name="Controls" expanded="True" />
+              <Node name="Members" expanded="True" />
+              <Node name="ContractManagerForm.cs" selected="True" />
+              <Node name="MainForm.cs" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/home/alex/Documents/Contest/Blockchain/2 Round/Ton/Messenger/ClientExecutor.cs" relfile="Messenger/ClientExecutor.cs" line="191" column="1" />
+      <Breakpoint file="/home/alex/Documents/Contest/Blockchain/2 Round/Ton/Messenger/ThreadStack.cs" relfile="Messenger/ThreadStack.cs" line="64" column="1" />
+      <Breakpoint file="/home/alex/Documents/Contest/Blockchain/2 Round/Ton/Messenger/ClientExecutor.cs" relfile="Messenger/ClientExecutor.cs" line="127" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.Messenger PreferredExecutionTarget="MonoDevelop.Default" />
+</Properties>

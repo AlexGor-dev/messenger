@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="56af97a2-3e13-475e-a2b9-eb508d22f019" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="1Uq63AwXKz8zO8lFmgWmsQ2pWqq" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Messenger" />
+    <property name="settings.editor.selected.configurable" value="preferences.customizations" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Messenger" />
+      <recent name="$PROJECT_DIR$/Common" />
+      <recent name="$PROJECT_DIR$/Manager" />
+      <recent name="$PROJECT_DIR$/lib" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Manager" />
+      <recent name="$PROJECT_DIR$/Messenger" />
+    </key>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="56af97a2-3e13-475e-a2b9-eb508d22f019" name="Default Changelist" comment="" />
+      <created>1576071576416</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1576071576416</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="352" y="329" width="623" height="390" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1576737588650">
+      <screen x="67" y="27" width="1213" height="997" />
+    </state>
+    <state x="352" y="329" width="623" height="390" key="#com.intellij.fileTypes.FileTypeChooser/67.27.1213.997@67.27.1213.997" timestamp="1576737588650" />
+    <state x="409" y="362" width="518" height="325" key="#com.intellij.ide.actions.ChooseComponentsToExportDialog" timestamp="1576920061840">
+      <screen x="67" y="27" width="1213" height="997" />
+    </state>
+    <state x="409" y="362" width="518" height="325" key="#com.intellij.ide.actions.ChooseComponentsToExportDialog/67.27.1213.997@67.27.1213.997" timestamp="1576920061840" />
+    <state x="441" y="268" width="444" height="513" key="FileChooserDialogImpl" timestamp="1576920059944">
+      <screen x="67" y="27" width="1213" height="997" />
+    </state>
+    <state x="441" y="268" width="444" height="513" key="FileChooserDialogImpl/67.27.1213.997@67.27.1213.997" timestamp="1576920059944" />
+    <state x="162" y="159" key="SettingsEditor" timestamp="1576657975515">
+      <screen x="67" y="27" width="1213" height="997" />
+    </state>
+    <state x="162" y="159" key="SettingsEditor/67.27.1213.997@67.27.1213.997" timestamp="1576657975515" />
+    <state x="318" y="261" width="710" height="526" key="find.popup" timestamp="1576153588152">
+      <screen x="67" y="27" width="1213" height="997" />
+    </state>
+    <state x="318" y="261" width="710" height="526" key="find.popup/67.27.1213.997@67.27.1213.997" timestamp="1576153588152" />
+  </component>
+</project>

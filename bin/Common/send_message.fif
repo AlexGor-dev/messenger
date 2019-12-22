@@ -1,0 +1,31 @@
+#!/usr/bin/env fift -s
+"TonUtil.fif" include
+"../lib/mylib.fif" include
+
+true constant bounce
+0x1002 constant action
+3 constant send-mode  // mode for SENDRAWMSG: +1 - sender pays fees, +2 - ignore errors
+
+$1 parse-int =: time
+$2 parse-int =: private_key
+$3 bounce parse-load-address =: bounce 2=: wallet_addr
+$4 bounce parse-load-address =: bounce 2=: dest_addr
+$5 $>GR =: amount
+$6 =: savefile
+def? $7 { @' $7 =: body-boc-file } if
+
+def? body-boc-file { @' body-boc-file file>B B>boc } { <b 0 32 u, "TEST" $, b> } cond
+constant body-cell
+
+<b b{01} s, bounce 1 i, b{000100} s, dest_addr addr, amount Gram, 0 9 64 32 + + 1+ u,
+  body-cell <s 2dup s-fits? not rot over 1 i, -rot { drop body-cell ref, } { s, } cond
+b>
+
+<b time 64 u, action 32 u, send-mode 8 u, swap ref, b>
+dup hash private_key intToKey ed25519_sign_uint
+<b b{1000100} s, wallet_addr addr, 0 Gram, b{00} s, swap B, swap ref, b>
+
+2 boc+>B
+savefile +".boc" tuck B>file
+."result:[" type ."]"
+

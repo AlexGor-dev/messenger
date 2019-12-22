@@ -1,0 +1,17 @@
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\bin\Debug\Messenger.exe.config
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\bin\Debug\Messenger.exe
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\bin\Debug\Messenger.pdb
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\bin\Debug\Mono.Data.Sqlite.dll
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\obj\Release\Messenger.AddMemberForm.resources
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\obj\Release\Messenger.ContractManagerForm.resources
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\obj\Release\Messenger.CreateContractForm.resources
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\obj\Release\Messenger.CreateManagerForm.resources
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\obj\Release\Messenger.MainForm.resources
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\obj\Release\Messenger.RenameForm.resources
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\obj\Release\Messenger.SendGramForm.resources
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\obj\Release\Messenger.SendGramsToForm.resources
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\obj\Release\Messenger.csproj.GenerateResource.cache
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\obj\Release\Messenger.csproj.CoreCompileInputs.cache
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\obj\Release\Messenger.csproj.CopyComplete
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\obj\Release\Messenger.exe
+E:\Contest\Blockchain\2 Round\submission\src\Messenger\obj\Release\Messenger.pdb
